@@ -1,0 +1,44 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div>
+    <div class="mt-5">
+        <h1 class="text-center">Directors</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Shows</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for director, shows in directors.items %}
+                <tr>
+                    <td class="col-4">{{director}}</td>
+                    <td class="col-8">
+                        <ul class="list-unstyled list-group">
+                            {% for show in shows %}
+                            <li>{{show}}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-2 d-flex justify-content-between">
+        <a
+            class="btn btn-primary w-25"
+            href="{% url 'directors' %}?page={{previous_page}}"
+            role="button"
+            >Previous Page</a
+        >
+        <a
+            class="btn btn-primary w-25"
+            href="{% url 'directors' %}?page={{next_page}}"
+            role="button"
+            >Next Page</a
+        >
+    </div>
+</div>
+{% endblock %}
