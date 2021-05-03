@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from shows.query import list_shows, list_directors, person_detail, show_detail
+from shows.query import list_shows, list_directors, list_actors, person_detail, show_detail
 
 
 def home(request):
@@ -35,6 +35,17 @@ def directors(request):
         page = int(page)
         params = {'previous_page': page - 1, 'next_page': page + 1, 'directors': list_directors(page)}
         return render(request, 'pages/directors.html', params)
+    return redirect(home)
+
+
+def actors(request):
+    if request.method == 'GET':
+        page = request.GET.get('page')
+        if page == None:
+            page = 0
+        page = int(page)
+        params = {'previous_page': page - 1, 'next_page': page + 1, 'actors': list_actors(page)}
+        return render(request, 'pages/actors.html', params)
     return redirect(home)
 
 

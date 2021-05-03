@@ -4,15 +4,14 @@
         <h1 class="text-center">{{name}}</h1>
     </div>
     {% if directorof %}
-    <div class="mt-2">
-        <h3 class="text-center">Direct</h3>
+    <div class="mt-2 mb-5">
+        <h3>Director In</h3>
         <table class="table">
             <thead>
                 <tr>
                     <th scope="col">Title</th>
                     <th scope="col">Type</th>
                     <th scope="col">Others Directors</th>
-                    <th scope="col">Cast</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,31 +27,18 @@
                     <td class="col-2">
                         <p class="text-center">{{show.type}}</p>
                     </td>
-                    <td class="col-3">
-                        <ul class="list-unstyled list-group">
+                    <td class="col-6">
+                        {% if show.directors %}
                             {% for person in show.directors %}
-                            <li class="mb-1">
                                 <a
-                                    class="btn btn-outline-dark w-100"
+                                    class="btn btn-outline-dark mb-1"
                                     href="{% url 'person' %}?name={{person}}"
                                     >{{person}}</a
                                 >
-                            </li>
                             {% endfor %}
-                        </ul>
-                    </td>
-                    <td class="col-3">
-                        <ul class="list-unstyled list-group">
-                            {% for person in show.cast %}
-                            <li class="mb-1">
-                                <a
-                                    class="btn btn-outline-dark w-100"
-                                    href="{% url 'person' %}?name={{person}}"
-                                    >{{person}}</a
-                                >
-                            </li>
-                            {% endfor %}
-                        </ul>
+                        {% else %}
+                            <p>--------------------------</p>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -61,13 +47,12 @@
     </div>
     {% endif %} {% if castof %}
     <div class="mt-2">
-        <h3 class="text-center">Cast</h3>
+        <h3>Actor In</h3>
         <table class="table">
             <thead>
                 <tr>
                     <th scope="col">Title</th>
                     <th scope="col">Type</th>
-                    <th scope="col">Directors</th>
                     <th scope="col">Others Actors</th>
                 </tr>
             </thead>
@@ -84,31 +69,18 @@
                     <td class="col-2">
                         <p class="text-center">{{show.type}}</p>
                     </td>
-                    <td class="col-3">
-                        <ul class="list-unstyled list-group">
-                            {% for person in show.directors %}
-                            <li class="mb-1">
-                                <a
-                                    class="btn btn-outline-dark w-100"
-                                    href="{% url 'person' %}?name={{person}}"
-                                    >{{person}}</a
-                                >
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                    <td class="col-3">
-                        <ul class="list-unstyled list-group">
+                    <td class="col-6">
+                        {% if show.cast %}
                             {% for person in show.cast %}
-                            <li class="mb-1">
                                 <a
-                                    class="btn btn-outline-dark w-100"
+                                    class="btn btn-outline-dark mb-1"
                                     href="{% url 'person' %}?name={{person}}"
                                     >{{person}}</a
                                 >
-                            </li>
                             {% endfor %}
-                        </ul>
+                        {% else %}
+                            <p>--------------------------</p>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
