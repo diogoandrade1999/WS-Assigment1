@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo-style.css'%}">
+<div>
+    <div class="mt-2 mb-2">
+        <img src="{% static 'img/home.jpg' %}" class="img-fluid" />
+    </div>
+<div class="divider" style="margin-top: 150px">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 col-sm-6" >
+                <div class="divider-wrapper divider-one">
+
+					<i class="fa fa-film"></i>
+					<h2>Shows</h2>
+					<p>You can search for a particular show and find out detailed information about it!</p>
+
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-6">
+				<div class="divider-wrapper divider-two">
+					<i class="fa fa-video-camera"></i>
+					<h2>Directors</h2>
+					<p>You can find out which director was behind a particular film or even all of their films!</p>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-12">
+				<div class="divider-wrapper divider-three">
+					<i class="fa fa-user"></i>
+					<h2>Responsive</h2>
+					<p>You can search for your favorite actor and find out what movies he was in!</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+{% endblock %}

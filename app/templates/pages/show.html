@@ -1,0 +1,67 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div>
+    <div class="mt-2">
+        <h1 class="text-center mb-5">{{title}}</h1>
+        {% if show %}
+            <table class="table">
+                <tbody class="fs-5">
+                    <tr class="align-middle">
+                        <th class="col-3">Type</th>
+                        <td class="col-9">{{show.type}}</td>
+                    </tr>
+                    <tr class="align-middle">
+                        <th class="col-3">Country</th>
+                        <td class="col-9">{{show.country}}</td>
+                    </tr>
+                    <tr class="align-middle">
+                        <th class="col-3">Description</th>
+                        <td class="col-9">{{show.description}}</td>
+                    </tr>
+                    <tr class="align-middle">
+                        <th class="col-3">Date Added</th>
+                        <td class="col-9">{{show.date_added}}</td>
+                    </tr>
+                    <tr class="align-middle">
+                        <th class="col-3">Release Year</th>
+                        <td class="col-9">{{show.release_year}}</td>
+                    </tr>
+                    <tr class="align-middle">
+                        <th class="col-3">Duration</th>
+                        <td class="col-9">{{show.duration}}</td>
+                    </tr>
+                    <tr class="align-middle">
+                        <th class="col-3">Listed In</th>
+                        <td class="col-9">{{show.listed_in}}</td>
+                    </tr>
+                    <tr class="align-middle">
+                        <th class="col-3">Directors</th>
+                        <td class="col-9">
+                            {% for person in show.directors %}
+                                <a
+                                    class="btn btn-outline-dark mb-1"
+                                    href="{% url 'person' %}?name={{person}}"
+                                    >{{person}}</a
+                                >
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr class="align-middle">
+                        <th class="col-3">Cast</th>
+                        <td class="col-9">
+                            {% for person in show.cast %}
+                                <a
+                                    class="btn btn-outline-dark  mb-1"
+                                    href="{% url 'person' %}?name={{person}}"
+                                    >{{person}}</a
+                                >
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {% else %}
+        <div class="alert alert-danger" role="alert">No Data Founded!</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
