@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %} {% load static %} {% load hastag %} {% block content %}
 <div>
     <div class="mt-2">
         <h1 class="text-center">Directors</h1>
@@ -10,18 +10,34 @@
                 </tr>
             </thead>
             <tbody>
-                {% for director, shows in directors.items %}
-                <tr>
-                    <td class="col-4">{{director}}</td>
+                {% if directors %} {% for director, shows in directors.items %}
+                <tr class="align-middle">
+                    <td class="col-4">
+                        <a
+                            class="btn btn-outline-dark w-100"
+                            href="{% url 'person' %}?name={{director}}"
+                            >{{director}}</a
+                        >
+                    </td>
                     <td class="col-8">
                         <ul class="list-unstyled list-group">
                             {% for show in shows %}
-                            <li>{{show}}</li>
+                            <li class="mb-1">
+                                <a
+                                    class="btn btn-outline-dark w-100"
+                                    href="{% url 'show' %}?title={{show|hastag}}"
+                                    >{{show}}</a
+                                >
+                            </li>
                             {% endfor %}
                         </ul>
                     </td>
                 </tr>
-                {% endfor %}
+                {% endfor %} {% else %}
+                <tr class="text-center">
+                    <td colspan="3">No Entries Founded!</td>
+                </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>

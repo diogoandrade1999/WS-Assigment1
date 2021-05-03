@@ -41,14 +41,17 @@ def read():
                 title = row[2].replace("\"", "'").replace("\n", " ")
                 data += [show_url + " " + url_predicate.format(predicates[2])  + " \"" + title + "\" ."]
 
-                # director
-                director = row[3]
-                if director != "":
-                    director_url = url_people.format(director.lower().replace(" ", "_").replace("\"", ""))
-                    if director not in peoples:
-                        peoples += [director]
-                        data += [director_url + " " + url_predicate.format("name")  + " \"" + director.replace("\"", "'") + "\" ."]
-                    data += [show_url + " " + url_predicate.format(predicates[3])  + " " + director_url + " ."]
+                # directors
+                directors = row[3]
+                if directors != "":
+                    for director in directors.split(","):
+                        if director[0] == " ":
+                            director = director[1:]
+                        director_url = url_people.format(director.lower().replace(" ", "_").replace("\"", ""))
+                        if director not in peoples:
+                            peoples += [director]
+                            data += [director_url + " " + url_predicate.format("name")  + " \"" + director.replace("\"", "'") + "\" ."]
+                        data += [show_url + " " + url_predicate.format(predicates[3])  + " " + director_url + " ."]
 
                 # cast
                 cast = row[4]

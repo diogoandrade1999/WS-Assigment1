@@ -1,0 +1,120 @@
+{% extends 'base.html' %} {% load static %} {% load hastag %} {% block content %}
+<div>
+    <div class="mt-2 mb-5">
+        <h1 class="text-center">{{name}}</h1>
+    </div>
+    {% if directorof %}
+    <div class="mt-2">
+        <h3 class="text-center">Direct</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Others Directors</th>
+                    <th scope="col">Cast</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for title, show in directorof.items %}
+                <tr class="align-middle">
+                    <td class="col-4">
+                        <a
+                            class="btn btn-outline-dark w-100"
+                            href="{% url 'show' %}?title={{title|hastag}}"
+                            >{{title}}</a
+                        >
+                    </td>
+                    <td class="col-2">
+                        <p class="text-center">{{show.type}}</p>
+                    </td>
+                    <td class="col-3">
+                        <ul class="list-unstyled list-group">
+                            {% for person in show.directors %}
+                            <li class="mb-1">
+                                <a
+                                    class="btn btn-outline-dark w-100"
+                                    href="{% url 'person' %}?name={{person}}"
+                                    >{{person}}</a
+                                >
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td class="col-3">
+                        <ul class="list-unstyled list-group">
+                            {% for person in show.cast %}
+                            <li class="mb-1">
+                                <a
+                                    class="btn btn-outline-dark w-100"
+                                    href="{% url 'person' %}?name={{person}}"
+                                    >{{person}}</a
+                                >
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %} {% if castof %}
+    <div class="mt-2">
+        <h3 class="text-center">Cast</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Directors</th>
+                    <th scope="col">Others Actors</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for title, show in castof.items %}
+                <tr class="align-middle">
+                    <td class="col-4">
+                        <a
+                            class="btn btn-outline-dark w-100"
+                            href="{% url 'show' %}?title={{title|hastag}}"
+                            >{{title}}</a
+                        >
+                    </td>
+                    <td class="col-2">
+                        <p class="text-center">{{show.type}}</p>
+                    </td>
+                    <td class="col-3">
+                        <ul class="list-unstyled list-group">
+                            {% for person in show.directors %}
+                            <li class="mb-1">
+                                <a
+                                    class="btn btn-outline-dark w-100"
+                                    href="{% url 'person' %}?name={{person}}"
+                                    >{{person}}</a
+                                >
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td class="col-3">
+                        <ul class="list-unstyled list-group">
+                            {% for person in show.cast %}
+                            <li class="mb-1">
+                                <a
+                                    class="btn btn-outline-dark w-100"
+                                    href="{% url 'person' %}?name={{person}}"
+                                    >{{person}}</a
+                                >
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
