@@ -12,3 +12,9 @@
 
 ### URL Repository
 * http://192.168.59.219:7200/repositories/shows
+
+
+## USAGE Conversor csv to nt
+```bash
+$ python3 conversor/conversor.py -f data/shows.csv
+```

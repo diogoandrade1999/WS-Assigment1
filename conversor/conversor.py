@@ -1,3 +1,4 @@
+import argparse
 import csv
 
 url_predicate = "<http://shows.org/pred/{}>"
@@ -10,7 +11,7 @@ url_duration = "<http://shows.org/duration/{}>"
 url_listed = "<http://shows.org/listed_in/{}>"
 
 
-def read():
+def read(filename):
     data = []
     predicates = []
     types = []
@@ -19,7 +20,7 @@ def read():
     years = []
     durations = []
     listed = []
-    with open("../data/shows.csv", 'r') as file:
+    with open(filename, 'r') as file:
         reader = csv.reader(file)
         for i, row in enumerate(reader):
             if i == 0:
@@ -66,12 +67,17 @@ def read():
                         data += [show_url + " " + url_predicate.format(predicates[4])  + " " + actor_url + " ."]
 
                 # country
-                country = row[5]
-                country_url = url_country.format(country.lower().replace(" ", "_"))
-                if country not in countries:
-                    countries += [country]
-                    data += [country_url + " " + url_predicate.format(predicates[5])  + " \"" + country + "\" ."]
-                data += [show_url + " " + url_predicate.format(predicates[5])  + " " + country_url + " ."]
+                countries = row[5]
+                if countries != "":
+                    for country in countries.split(","):
+                        if len(country) > 1:
+                            if country[0] == " ":
+                                country = country[1:]
+                            country_url = url_country.format(country.lower().replace(" ", "_"))
+                            if country not in countries:
+                                countries += [country]
+                                data += [country_url + " " + url_predicate.format(predicates[5])  + " \"" + country + "\" ."]
+                            data += [show_url + " " + url_predicate.format(predicates[5])  + " " + country_url + " ."]
 
                 # date_added
                 date_added = row[6]
@@ -110,16 +116,21 @@ def read():
     return data
 
 
-def write(data):
-    f = open("../data/shows.nt", "w")
+def write(filename, data):
+    filename = filename.replace(".csv", ".nt")
+    f = open(filename, "w")
     for d in data:
         f.write(d + "\n")
     f.close()
 
 
-def main():
-    write(read())
+def main(filename):
+    write(filename, read(filename))
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", dest="path_file", required=True, help="Path to file of csv data", type=str)
+    args = parser.parse_args()
+
+    main(args.path_file)
