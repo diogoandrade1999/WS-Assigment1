@@ -12,7 +12,8 @@ def shows(request):
         if page == None:
             page = 0
         page = int(page)
-        params = {'previous_page': page - 1, 'next_page': page + 1, 'shows': list_shows(page)}
+        name = request.GET.get('name')
+        params = {'previous_page': page - 1, 'next_page': page + 1, 'shows': list_shows(page, name)}
         return render(request, 'pages/shows.html', params)
     return redirect(home)
 
@@ -33,7 +34,8 @@ def directors(request):
         if page == None:
             page = 0
         page = int(page)
-        params = {'previous_page': page - 1, 'next_page': page + 1, 'directors': list_directors(page)}
+        name = request.GET.get('name')
+        params = {'previous_page': page - 1, 'next_page': page + 1, 'directors': list_directors(page, name)}
         return render(request, 'pages/directors.html', params)
     return redirect(home)
 
@@ -44,7 +46,8 @@ def actors(request):
         if page == None:
             page = 0
         page = int(page)
-        params = {'previous_page': page - 1, 'next_page': page + 1, 'actors': list_actors(page)}
+        name = request.GET.get('name')
+        params = {'previous_page': page - 1, 'next_page': page + 1, 'actors': list_actors(page, name)}
         return render(request, 'pages/actors.html', params)
     return redirect(home)
 

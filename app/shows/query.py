@@ -1,11 +1,14 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Graph
 
+sparql = SPARQLWrapper("http://172.17.0.1:7200/repositories/shows")
 
-sparql = SPARQLWrapper("http://192.168.59.219:7200/repositories/shows")
 
+def list_shows(page, name=None):
 
-def list_shows(page):
+    if name is None:
+        name = ""
+
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -16,6 +19,7 @@ def list_shows(page):
             ?type pred:type ?typename .
             ?show pred:director ?director .
             ?director pred:name ?directorname .
+            FILTER regex(?title, '""" + name + """' , "i") .
         } OFFSET """ + str(page * 30) + """ LIMIT 30
     """)
     sparql.setReturnFormat(JSON)
@@ -35,7 +39,10 @@ def list_shows(page):
         return None
 
 
-def list_directors(page):
+def list_directors(page, name=None):
+    if name is None:
+        name = ""
+
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -44,6 +51,7 @@ def list_directors(page):
             ?show pred:director ?director .
             ?director pred:name ?directorname .
             ?show pred:title ?title .
+            FILTER regex(?directorname, '""" + name + """' , "i") .
         } OFFSET """ + str(page * 30) + """ LIMIT 30
     """)
     sparql.setReturnFormat(JSON)
@@ -63,17 +71,20 @@ def list_directors(page):
         return None
 
 
-def list_actors(page):
+def list_actors(page, name=None):
+    if name is None:
+        name = ""
+
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
-
-        SELECT ?actorname ?title
+        SELECT ?actorname ?title 
         WHERE {
             ?show pred:cast ?actor .
             ?actor pred:name ?actorname .
             ?show pred:title ?title .
-        } OFFSET """ + str(page * 30) + """ LIMIT 30
-    """)
+            FILTER regex(?actorname, '""" + name + """' , "i") .
+            }   OFFSET """ + str(page * 30) + """ LIMIT 30
+        """)
     sparql.setReturnFormat(JSON)
 
     try:
@@ -191,14 +202,14 @@ def show_detail(title):
             for i, d in enumerate(data):
                 if i == 0:
                     results = {'type': d['typename']['value'],
-                                'country': d['countryname']['value'],
-                                'description': d['description']['value'],
-                                'date_added': d['date_added']['value'],
-                                'release_year': d['release_yearname']['value'],
-                                'duration': d['durationname']['value'],
-                                'listed_in': d['listed_inname']['value'],
-                                'directors': [],
-                                'cast': []}
+                               'country': d['countryname']['value'],
+                               'description': d['description']['value'],
+                               'date_added': d['date_added']['value'],
+                               'release_year': d['release_yearname']['value'],
+                               'duration': d['durationname']['value'],
+                               'listed_in': d['listed_inname']['value'],
+                               'directors': [],
+                               'cast': []}
                 director = d['directorname']['value']
                 cast = d['castname']['value']
                 if director not in results['directors']:

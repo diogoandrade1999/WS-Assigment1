@@ -2,6 +2,10 @@
 <div>
     <div class="mt-2">
         <h1 class="text-center">Actors</h1>
+        <form>
+            <label for="name">Actor name:</label><br>
+            <input type="text" id="name" name="name"><br>
+        </form>
         <table class="table">
             <thead>
                 <tr>
@@ -9,7 +13,8 @@
                     <th scope="col">Shows</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="actors_table">
+
                 {% if actors %} {% for actor, shows in actors.items %}
                 <tr class="align-middle">
                     <td class="col-4">
@@ -57,4 +62,5 @@
         >
     </div>
 </div>
+
 {% endblock %}
