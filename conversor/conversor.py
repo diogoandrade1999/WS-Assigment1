@@ -67,9 +67,9 @@ def read(filename):
                         data += [show_url + " " + url_predicate.format(predicates[4])  + " " + actor_url + " ."]
 
                 # country
-                countries = row[5]
-                if countries != "":
-                    for country in countries.split(","):
+                countries_show = row[5]
+                if countries_show != "":
+                    for country in countries_show.split(","):
                         if len(country) > 1:
                             if country[0] == " ":
                                 country = country[1:]
