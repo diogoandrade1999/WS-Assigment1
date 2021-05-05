@@ -1,4 +1,8 @@
-{% extends 'base.html' %} {% load static %} {% load hastag %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% load hastag %}
+{% load ampersand %}
+{% block content %}
 <div>
     <div class="mt-2 mb-5">
         <h1 class="text-center">Shows</h1>
@@ -109,7 +113,7 @@
         {% if previous_page is not None %}
         <a
             class="btn btn-primary w-25"
-            href="{% url 'shows' %}?page={{previous_page}}&searchShowTitle={{title}}{% for t in t_checked %}&searchShowType={{t}}{% endfor %}{% for c in c_checked %}&searchShowCountry={{c}}{% endfor %}{% for l in l_checked %}&searchShowListedIn={{l}}{% endfor %}"
+            href="{% url 'shows' %}?page={{previous_page}}{% if title %}&searchShowTitle={{title|hastag}}{% endif %}{% for t in t_checked %}&searchShowType={{t}}{% endfor %}{% for c in c_checked %}&searchShowCountry={{c}}{% endfor %}{% for l in l_checked %}&searchShowListedIn={{l|ampersand}}{% endfor %}"
             role="button"
             >Previous Page</a
         >
@@ -119,7 +123,7 @@
         {% if next_page is not None %}
         <a
             class="btn btn-primary w-25"
-            href="{% url 'shows' %}?page={{next_page}}&searchShowTitle={{title}}{% for t in t_checked %}&searchShowType={{t}}{% endfor %}{% for c in c_checked %}&searchShowCountry={{c}}{% endfor %}{% for l in l_checked %}&searchShowListedIn={{l}}{% endfor %}"
+            href="{% url 'shows' %}?page={{next_page}}{% if title %}&searchShowTitle={{title|hastag}}{% endif %}{% for t in t_checked %}&searchShowType={{t}}{% endfor %}{% for c in c_checked %}&searchShowCountry={{c}}{% endfor %}{% for l in l_checked %}&searchShowListedIn={{l|ampersand}}{% endfor %}"
             role="button"
             >Next Page</a
         >

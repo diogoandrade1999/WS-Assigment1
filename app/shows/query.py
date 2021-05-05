@@ -137,12 +137,13 @@ def list_directors(page):
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
-        SELECT ?directorname ?title
+        SELECT ?directorname (GROUP_CONCAT(?title;SEPARATOR=";") AS ?titles)
+
         WHERE {
             ?show pred:director ?director .
             ?director pred:name ?directorname .
             ?show pred:title ?title .
-        } OFFSET """ + str(page * 30) + """ LIMIT 30
+        } GROUP bY ?directorname OFFSET """ + str(page * 30) + """ LIMIT 30
     """)
     sparql.setReturnFormat(JSON)
 
@@ -153,9 +154,12 @@ def list_directors(page):
             results = {}
             for d in data:
                 director = d['directorname']['value']
-                if director not in results:
-                    results[director] = []
-                results[director] += [d['title']['value']]
+                titles = d['titles']['value']
+                if titles != "":
+                    titles = titles.split(';')
+                else:
+                    titles = []
+                results[director] = titles
         return results
     except Exception:
         return None
@@ -165,12 +169,12 @@ def list_actors(page):
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
-        SELECT ?actorname ?title
+        SELECT ?actorname (GROUP_CONCAT(?title;SEPARATOR=";") AS ?titles)
         WHERE {
             ?show pred:cast ?actor .
             ?actor pred:name ?actorname .
             ?show pred:title ?title .
-        } OFFSET """ + str(page * 30) + """ LIMIT 30
+        } GROUP bY ?actorname OFFSET """ + str(page * 30) + """ LIMIT 30
     """)
     sparql.setReturnFormat(JSON)
 
@@ -181,9 +185,12 @@ def list_actors(page):
             results = {}
             for d in data:
                 actor = d['actorname']['value']
-                if actor not in results:
-                    results[actor] = []
-                results[actor] += [d['title']['value']]
+                titles = d['titles']['value']
+                if titles != "":
+                    titles = titles.split(';')
+                else:
+                    titles = []
+                results[actor] = titles
         return results
     except Exception:
         return None
@@ -373,4 +380,69 @@ def search_shows(page, title, types_list, countries_list, listed_in_list):
         return results
     except Exception as e:
         print(e)
+        return None
+
+
+def search_directors(page, name):
+    sparql.setQuery("""
+        PREFIX pred: <http://shows.org/pred/>
+
+        SELECT ?directorname (GROUP_CONCAT(?title;SEPARATOR=";") AS ?titles)
+
+        WHERE {
+            ?show pred:director ?director .
+            ?director pred:name ?directorname .
+            FILTER regex(str(?directorname), """ + "\"" + name + "\"" + """, "i") .
+            ?show pred:title ?title .
+        } GROUP bY ?directorname OFFSET """ + str(page * 30) + """ LIMIT 30
+    """)
+    sparql.setReturnFormat(JSON)
+
+    try:
+        results = sparql.query().convert()
+        if results:
+            data = results['results']['bindings']
+            results = {}
+            for d in data:
+                director = d['directorname']['value']
+                titles = d['titles']['value']
+                if titles != "":
+                    titles = titles.split(';')
+                else:
+                    titles = []
+                results[director] = titles
+        return results
+    except Exception:
+        return None
+
+
+def search_actors(page, name):
+    sparql.setQuery("""
+        PREFIX pred: <http://shows.org/pred/>
+
+        SELECT ?actorname (GROUP_CONCAT(?title;SEPARATOR=";") AS ?titles)
+        WHERE {
+            ?show pred:cast ?actor .
+            ?actor pred:name ?actorname .
+            FILTER regex(str(?actorname), """ + "\"" + name + "\"" + """, "i") .
+            ?show pred:title ?title .
+        } GROUP bY ?actorname OFFSET """ + str(page * 30) + """ LIMIT 30
+    """)
+    sparql.setReturnFormat(JSON)
+
+    try:
+        results = sparql.query().convert()
+        if results:
+            data = results['results']['bindings']
+            results = {}
+            for d in data:
+                actor = d['actorname']['value']
+                titles = d['titles']['value']
+                if titles != "":
+                    titles = titles.split(';')
+                else:
+                    titles = []
+                results[actor] = titles
+        return results
+    except Exception:
         return None
