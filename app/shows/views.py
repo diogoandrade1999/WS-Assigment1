@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from shows.query import *
+from django.views.decorators.csrf import csrf_exempt
 import math
 
 
@@ -27,7 +28,8 @@ def shows(request):
                 params['t_checked'] = request.GET.getlist('searchShowType')
                 params['c_checked'] = request.GET.getlist('searchShowCountry')
                 params['l_checked'] = request.GET.getlist('searchShowListedIn')
-                params['shows'] = search_shows(page, params['title'], params['t_checked'], params['c_checked'], params['l_checked'])  
+                params['shows'] = search_shows(page, params['title'], params['t_checked'], params['c_checked'],
+                                               params['l_checked'])
         elif request.method == 'POST':
             page = request.POST.get('page')
             if page == None:
@@ -37,7 +39,8 @@ def shows(request):
             params['t_checked'] = request.POST.getlist('searchShowType')
             params['c_checked'] = request.POST.getlist('searchShowCountry')
             params['l_checked'] = request.POST.getlist('searchShowListedIn')
-            params['shows'] = search_shows(page, params['title'], params['t_checked'], params['c_checked'], params['l_checked'])
+            params['shows'] = search_shows(page, params['title'], params['t_checked'], params['c_checked'],
+                                           params['l_checked'])
 
         params['previous_page'] = page - 1 if page > 0 else None
         params['next_page'] = page + 1 if len(params['shows']) == 30 else None
@@ -85,4 +88,15 @@ def person(request):
         directorof, castof = person_detail(name)
         params = {'name': name, 'directorof': directorof, 'castof': castof}
         return render(request, 'pages/person.html', params)
+    return redirect(home)
+
+@csrf_exempt
+def add(request):
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        predicate = request.POST.get('predicate')
+        object = request.POST.get('object')
+        return render(request, 'pages/add.html', insert(subject, predicate, object))
+    if request.method == 'GET':
+        return render(request, 'pages/add.html')
     return redirect(home)

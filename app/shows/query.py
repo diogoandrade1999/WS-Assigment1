@@ -2,7 +2,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Graph
 
 
-sparql = SPARQLWrapper("http://192.168.59.219:7200/repositories/shows")
+sparql = SPARQLWrapper("http://172.17.0.1:7200/repositories/shows")
 
 
 def count_shows():
@@ -374,3 +374,15 @@ def search_shows(page, title, types_list, countries_list, listed_in_list):
     except Exception as e:
         print(e)
         return None
+
+
+def insert(subject, predicate, object):
+
+    sparql.setQuery("""
+        PREFIX pred: <http://shows.org/pred/>
+        Insert DATA {
+        pred:""" + subject + """ pred:""" + predicate + """ '""" + object + """' .
+        }
+    """)
+
+    return

@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% load static %} {% load hastag %} {% block content %}
+<div>
+    <div class="mt-2 mb-5">
+        <h1 class="text-center">Add</h1>
+    </div>
+    <label class="form-label" for="subject">Subject</label>
+    <input type="text" name="subject" id="subject" placeholder="subject">
+
+    <label class="form-label" for="subject">Predicate</label>
+    <input type="text" name="predicate" id="predicate" placeholder="predicate">
+
+    <label class="form-label" for="subject">Object</label>
+    <input type="text" name="object" id="object" placeholder="object">
+    <br>
+
+    <button type="button" id="insert">Insert</button>
+
+
+<script>
+    const button = document.getElementById('insert');
+    button.addEventListener('click', async _ => {
+  try {
+    const response = await fetch(window.location.href, {
+      method: 'post',
+      body: {
+          subject: document.getElementById('subject').text,
+          predicate: document.getElementById('predicate').text,
+          object: document.getElementById('object').text,
+      }
+    });
+    console.log('Completed!', response);
+  } catch(err) {
+    console.error(`Error: ${err}`);
+  }
+});
+
+</script>
+
+</div>
+{% endblock %}
+
