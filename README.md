@@ -25,3 +25,10 @@
 ```bash
 $ python3 conversor/conversor.py -f data/shows.csv
 ```
+
+## EXECUTE APP
+
+```bash
+$ pip3 install -r requirements.txt
+$ python3 app/manage.py runserver
+```
