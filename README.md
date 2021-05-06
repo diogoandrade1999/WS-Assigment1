@@ -18,7 +18,7 @@
 
 ### URL Repository
 
--   http://192.168.59.219:7200/repositories/shows
+-   http://127.0.0.1:7200/repositories/shows
 
 ## USAGE Conversor csv to nt
 

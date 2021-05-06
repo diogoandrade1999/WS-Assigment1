@@ -1,7 +1,7 @@
 from SPARQLWrapper import SPARQLWrapper, JSON, POST
 
 
-URL = "http://192.168.59.219:7200/repositories/shows"
+URL = "http://127.0.0.1:7200/repositories/shows"
 
 
 def count_shows():
