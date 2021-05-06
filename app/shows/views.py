@@ -57,6 +57,37 @@ def show(request):
     return redirect(shows)
 
 
+def edit_show(request):
+    if request.method == 'GET' or request.method == 'POST':
+        title = request.GET.get('title')
+        if title == None:
+            return redirect(shows)
+        params = {'types': list_shows_type(),
+                  'countries': sorted(list_shows_countries()),
+                  'listed_in': sorted(list_shows_listed_in()),
+                  'title': title,
+                  'show': show_detail(title),
+                  }
+        if request.method == 'GET':
+            return render(request, 'pages/edit_show.html', params)
+        elif request.method == 'POST':
+            description = request.POST.get('editShowDescription')
+            t_checked = request.POST.get('editShowType')
+            c_checked = request.POST.getlist('editShowCountry')
+            l_checked = request.POST.getlist('editShowListedIn')
+            show_edit(title,
+                      params['show'].get('description'),
+                      params['show'].get('type'),
+                      params['show'].get('countries'),
+                      params['show'].get('listed_in'),
+                      description,
+                      t_checked,
+                      c_checked,
+                      l_checked)
+            return redirect('/show/?title=' + title)
+    return redirect(shows)
+
+
 def directors(request):
     if request.method == 'GET' or request.method == 'POST':
         params = {'name': request.GET.get('searchDirectorName')}

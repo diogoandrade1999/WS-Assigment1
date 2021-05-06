@@ -1,11 +1,11 @@
-from SPARQLWrapper import SPARQLWrapper, JSON
-from rdflib import Graph
+from SPARQLWrapper import SPARQLWrapper, JSON, POST
 
 
-sparql = SPARQLWrapper("http://192.168.59.219:7200/repositories/shows")
+URL = "http://192.168.59.219:7200/repositories/shows"
 
 
 def count_shows():
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -26,6 +26,7 @@ def count_shows():
 
 
 def list_shows(page):
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -62,6 +63,7 @@ def list_shows(page):
 
 
 def list_shows_type():
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -86,6 +88,7 @@ def list_shows_type():
 
 
 def list_shows_countries():
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -110,6 +113,7 @@ def list_shows_countries():
 
 
 def list_shows_listed_in():
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -134,6 +138,7 @@ def list_shows_listed_in():
 
 
 def list_directors(page):
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -166,6 +171,7 @@ def list_directors(page):
 
 
 def list_actors(page):
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -197,6 +203,7 @@ def list_actors(page):
 
 
 def person_detail(name):
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -282,6 +289,7 @@ def person_detail(name):
 
 
 def show_detail(title):
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -343,6 +351,7 @@ def show_detail(title):
 
 
 def search_shows(page, title, types_list, countries_list, listed_in_list):
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -384,6 +393,7 @@ def search_shows(page, title, types_list, countries_list, listed_in_list):
 
 
 def search_directors(page, name):
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -417,6 +427,7 @@ def search_directors(page, name):
 
 
 def search_actors(page, name):
+    sparql = SPARQLWrapper(URL)
     sparql.setQuery("""
         PREFIX pred: <http://shows.org/pred/>
 
@@ -446,3 +457,117 @@ def search_actors(page, name):
         return results
     except Exception:
         return None
+
+
+def show_edit(title, description, type_show, countries_list,
+              listed_in_list, new_description, new_type_show,
+              new_countries_list, new_listed_in_list):
+    sparql = SPARQLWrapper(URL + "/statements")
+    sparql.setMethod(POST)
+
+    if description != new_description:
+        sparql.setQuery("""
+            PREFIX pred: <http://shows.org/pred/>
+
+            DELETE {
+                ?show pred:description ?description .
+            }
+            INSERT {
+                ?show pred:description """ + "\"" + new_description + "\"" + """ .
+            }
+            WHERE {
+                ?show pred:title """ + "\"" + title + "\"" + """ .
+                ?show pred:description ?description .
+            }
+        """)
+
+        try:
+            results = sparql.query()
+        except Exception:
+            pass
+
+    if type_show != new_type_show:
+        sparql.setQuery("""
+            PREFIX pred: <http://shows.org/pred/>
+
+            DELETE {
+                ?show pred:type ?type .
+            }
+            INSERT {
+                ?show pred:type ?newtype .
+            }
+            WHERE {
+                ?show pred:title """ + "\"" + title + "\"" + """ .
+                ?show pred:type ?type .
+                ?newtype pred:type """ + "\"" + new_type_show + "\"" + """ .
+            }
+        """)
+
+        try:
+            results = sparql.query()
+        except Exception:
+            pass
+
+    if countries_list != new_countries_list:
+        countries_get = ""
+        countries_delete = ""
+        countries_insert = ""
+        for i, country in enumerate(countries_list):
+            if country not in new_countries_list:
+                countries_get += "?country" + str(i) + " pred:country " + "\"" + country + "\" .\n"
+                countries_delete += "?show pred:country ?country" + str(i) + " .\n"
+        for i, country in enumerate(new_countries_list, start=len(countries_list)):
+            if country not in countries_list:
+                countries_get += "?country" + str(i) + " pred:country " + "\"" + country + "\" .\n"
+                countries_insert += "?show pred:country ?country" + str(i) + " .\n"
+        sparql.setQuery("""
+            PREFIX pred: <http://shows.org/pred/>
+
+            DELETE {
+                """ + countries_delete + """
+            }
+            INSERT {
+                """ + countries_insert + """
+            }
+            WHERE {
+                ?show pred:title """ + "\"" + title + "\"" + """ .
+                """ + countries_get + """
+            }
+        """)
+
+        try:
+            results = sparql.query()
+        except Exception:
+            pass
+
+    if listed_in_list != new_listed_in_list:
+        listed_in_get = ""
+        listed_in_delete = ""
+        listed_in_insert = ""
+        for i, listed_in in enumerate(listed_in_list):
+            if listed_in not in new_listed_in_list:
+                listed_in_get += "?listed_in" + str(i) + " pred:listed_in " + "\"" + listed_in + "\" .\n"
+                listed_in_delete += "?show pred:listed_in ?listed_in" + str(i) + " .\n"
+        for i, listed_in in enumerate(new_listed_in_list, start=len(listed_in_list)):
+            if listed_in not in listed_in_list:
+                listed_in_get += "?listed_in" + str(i) + " pred:listed_in " + "\"" + listed_in + "\" .\n"
+                listed_in_insert += "?show pred:listed_in ?listed_in" + str(i) + " .\n"
+        sparql.setQuery("""
+            PREFIX pred: <http://shows.org/pred/>
+
+            DELETE {
+                """ + listed_in_delete + """
+            }
+            INSERT {
+                """ + listed_in_insert + """
+            }
+            WHERE {
+                ?show pred:title """ + "\"" + title + "\"" + """ .
+                """ + listed_in_get + """
+            }
+        """)
+
+        try:
+            results = sparql.query()
+        except Exception:
+            pass

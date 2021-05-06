@@ -11,7 +11,7 @@
         <form action="{% url 'actors' %}" method="post" class="row">
             {% csrf_token %}
             <div class="col-9">
-                <input type="text" class="form-control w-100" name="searchActorName" id="searchActorName" placeholder="Actor Name" {% if name %}value={{name}}{% endif %}>
+                <input type="text" class="form-control w-100" name="searchActorName" id="searchActorName" placeholder="Actor Name" {% if name %}value="{{name}}"{% endif %}>
             </div>
             <div class="col-3">
                 <button type="submit" class="btn btn-primary w-100">Search</button>
